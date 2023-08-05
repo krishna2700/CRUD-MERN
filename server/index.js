@@ -1,8 +1,8 @@
 import express from "express";
 import connection from "./database/db.js";
 import dotenv from "dotenv";
-import Routes from "./routes/routes.js";
 import cors from "cors";
+import Routes from "./routes/routes.js";
 import bodyParser from "body-parser";
 
 const app = express();
