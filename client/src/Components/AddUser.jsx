@@ -27,32 +27,53 @@ const defaultValue = {
 
 const AddUser = () => {
   const [user, setUser] = useState(defaultValue);
+
   const onValueChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
 
   const addUserDetails = async () => {
+    console.log("Before API Call:", user);
     await addUser(user);
+    console.log("After API Call:", user);
+    setUser(defaultValue);
   };
+
   return (
     <div>
       <Container>
         <Typography variant="h4">Add User</Typography>
         <FormControl>
           <InputLabel>Name</InputLabel>
-          <Input onChange={(e) => onValueChange(e)} name="name" />
+          <Input
+            onChange={(e) => onValueChange(e)}
+            name="name"
+            value={user.name}
+          />
         </FormControl>
         <FormControl>
           <InputLabel>Username</InputLabel>
-          <Input onChange={(e) => onValueChange(e)} name="username" />
+          <Input
+            onChange={(e) => onValueChange(e)}
+            name="username"
+            value={user.username}
+          />
         </FormControl>
         <FormControl>
           <InputLabel>Email</InputLabel>
-          <Input onChange={(e) => onValueChange(e)} name="email" />
+          <Input
+            onChange={(e) => onValueChange(e)}
+            name="email"
+            value={user.email}
+          />
         </FormControl>
         <FormControl>
           <InputLabel>Phone</InputLabel>
-          <Input onChange={(e) => onValueChange(e)} name="phone" />
+          <Input
+            onChange={(e) => onValueChange(e)}
+            name="phone"
+            value={user.phone}
+          />
         </FormControl>
         <FormControl>
           <Button variant="contained" onClick={() => addUserDetails()}>
