@@ -3,7 +3,6 @@ import User from "../schema/user-schema.js";
 
 export const addUser = async (request, response) => {
   const user = request.body;
-
   const newUser = new User(user);
 
   try {
