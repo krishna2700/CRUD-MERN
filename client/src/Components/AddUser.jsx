@@ -4,12 +4,14 @@ import {
   Button,
   FormControl,
   FormGroup,
+  FormHelperText,
   Input,
   InputLabel,
+  Snackbar,
   Typography,
-  FormHelperText,
 } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { addUser } from "../service/api";
 
 const Container = styled(FormGroup)`
@@ -32,6 +34,16 @@ const AddUser = () => {
   const [isFormValid, setIsFormValid] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [phoneError, setPhoneError] = useState(false);
+  const navigate = useNavigate();
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  const openSnackbar = () => {
+    setSnackbarOpen(true);
+  };
+
+  const closeSnackbar = () => {
+    setSnackbarOpen(false);
+  };
 
   const validateForm = useCallback(() => {
     const { name, username, email, phone } = user;
@@ -83,6 +95,9 @@ const AddUser = () => {
     console.log("After API Call:", user);
     setUser(defaultValue);
     setIsFormValid(false);
+    openSnackbar();
+    navigate(`/alluser`);
+    closeSnackbar();
   };
 
   return (
@@ -142,6 +157,12 @@ const AddUser = () => {
           </Button>
         </FormControl>
       </Container>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={5000}
+        // onClose={closeSnackbar}
+        message="User added successfully!"
+      />
     </div>
   );
 };
