@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import styled from "@emotion/styled";
 import {
   Button,
@@ -6,8 +7,9 @@ import {
   Input,
   InputLabel,
   Typography,
+  FormHelperText,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { addUser } from "../service/api";
 
 const Container = styled(FormGroup)`
@@ -27,16 +29,60 @@ const defaultValue = {
 
 const AddUser = () => {
   const [user, setUser] = useState(defaultValue);
+  const [isFormValid, setIsFormValid] = useState(false);
+  const [emailError, setEmailError] = useState(false);
+  const [phoneError, setPhoneError] = useState(false);
+
+  const validateForm = useCallback(() => {
+    const { name, username, email, phone } = user;
+    return name && username && validateEmail(email) && validatePhone(phone);
+  });
+
+  const validateEmail = (email) => {
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    const isValid = emailPattern.test(email);
+    setEmailError(!isValid);
+    return isValid;
+  };
+
+  const validatePhone = (phone) => {
+    const phonePattern = /^\d{10}$/;
+    const isValid = phonePattern.test(phone);
+    setPhoneError(!isValid);
+    return isValid;
+  };
 
   const onValueChange = (e) => {
-    setUser({ ...user, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setUser({ ...user, [name]: value });
+
+    if (name === "email") {
+      validateEmail(value);
+    } else if (name === "phone") {
+      validatePhone(value);
+    }
   };
+
+  const onBlurValidation = (e) => {
+    const { name, value } = e.target;
+    if (name === "email") {
+      validateEmail(value);
+    } else if (name === "phone") {
+      validatePhone(value);
+    }
+    setIsFormValid(validateForm());
+  };
+
+  useEffect(() => {
+    setIsFormValid(validateForm());
+  }, [user, validateForm]);
 
   const addUserDetails = async () => {
     console.log("Before API Call:", user);
     await addUser(user);
     console.log("After API Call:", user);
     setUser(defaultValue);
+    setIsFormValid(false);
   };
 
   return (
@@ -63,20 +109,35 @@ const AddUser = () => {
           <InputLabel>Email</InputLabel>
           <Input
             onChange={(e) => onValueChange(e)}
+            onBlur={(e) => onBlurValidation(e)}
             name="email"
             value={user.email}
+            error={emailError}
           />
+          {emailError && (
+            <FormHelperText error>Email is not valid</FormHelperText>
+          )}
         </FormControl>
         <FormControl>
           <InputLabel>Phone</InputLabel>
           <Input
             onChange={(e) => onValueChange(e)}
+            onBlur={(e) => onBlurValidation(e)}
             name="phone"
             value={user.phone}
+            error={phoneError}
+            inputProps={{ maxLength: 10 }}
           />
+          {phoneError && (
+            <FormHelperText error>Phone number is not valid</FormHelperText>
+          )}
         </FormControl>
         <FormControl>
-          <Button variant="contained" onClick={() => addUserDetails()}>
+          <Button
+            variant="contained"
+            onClick={() => addUserDetails()}
+            disabled={!isFormValid}
+          >
             Add User
           </Button>
         </FormControl>
