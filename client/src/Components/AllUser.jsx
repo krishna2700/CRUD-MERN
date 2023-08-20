@@ -9,6 +9,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { getUsers } from "../service/api";
 import { styled } from "@mui/system";
+import { useNavigate } from "react-router-dom";
 
 const StyledTable = styled(Table)({
   width: "90%",
@@ -30,6 +31,7 @@ const TBody = styled(TableRow)({
 });
 
 const AllUser = () => {
+  const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   useEffect(() => {
     getAllUsers();
@@ -66,7 +68,13 @@ const AllUser = () => {
             <TableCell>{user.email}</TableCell>
             <TableCell>{user.phone}</TableCell>
             <TableCell>
-              <Button variant="contained" style={{ marginRight: 10 }}>
+              <Button
+                variant="contained"
+                style={{ marginRight: 10 }}
+                onClick={() => {
+                  navigate("./editUser");
+                }}
+              >
                 Edit
               </Button>
               <Button variant="contained" color="secondary">
