@@ -15,7 +15,7 @@ const App = () => {
         <Route path="/" element={<CrudApp />} />
         <Route path="/alluser" element={<AllUser />} />
         <Route path="/adduser" element={<AddUser />} />
-        <Route path="/editUser" element={<EditUser />} />
+        <Route path="/editUser/:id" element={<EditUser />} />
       </Routes>
     </BrowserRouter>
   );

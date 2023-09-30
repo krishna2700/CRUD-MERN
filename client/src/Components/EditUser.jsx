@@ -6,11 +6,11 @@ import {
   FormGroup,
   Input,
   InputLabel,
-  Snackbar,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
-import { addUser } from "../service/api";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { editUser, getUser } from "../service/api";
 
 const Container = styled(FormGroup)`
   width: 50%;
@@ -28,29 +28,30 @@ const defaultValue = {
 };
 
 const EditUser = () => {
+  const navigate = useNavigate();
+  const { id } = useParams();
   const [user, setUser] = useState(defaultValue);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-  const openSnackbar = () => {
-    setSnackbarOpen(true);
+  const loadUserDetails = async () => {
+    const response = await getUser(id);
+    setUser(response.data);
   };
 
-  const closeSnackbar = () => {
-    setSnackbarOpen(false);
-  };
+  useEffect(() => {
+    loadUserDetails();
+  }, []);
 
   const onValueChange = (e) => {
     const { name, value } = e.target;
     setUser({ ...user, [name]: value });
   };
 
-  const addUserDetails = async () => {
+  const editUserDetails = async () => {
     console.log("Before API Call:", user);
-    await addUser(user);
+    await editUser(user, id);
     console.log("After API Call:", user);
     setUser(defaultValue);
-    openSnackbar();
-    closeSnackbar();
+    navigate(`/alluser`);
   };
 
   return (
@@ -66,7 +67,7 @@ const EditUser = () => {
           />
         </FormControl>
         <FormControl>
-          <InputLabel>Username</InputLabel>
+          <InputLabel>userName</InputLabel>
           <Input
             onChange={(e) => onValueChange(e)}
             name="username"
@@ -91,17 +92,11 @@ const EditUser = () => {
           />
         </FormControl>
         <FormControl>
-          <Button variant="contained" onClick={() => addUserDetails()}>
+          <Button variant="contained" onClick={() => editUserDetails()}>
             Edit User
           </Button>
         </FormControl>
       </Container>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={5000}
-        // onClose={closeSnackbar}
-        message="User Edited successfully!"
-      />
     </div>
   );
 };

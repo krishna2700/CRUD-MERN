@@ -23,3 +23,14 @@ export const getUsers = async (request, response) => {
     response.status(404).json({ message: error });
   }
 };
+
+export const getUser = async (request, response) => {
+  console.log(request.params.id);
+  try {
+    // const user = await User.find({ _id: request.params.id });  (this is also the right way and below is also the right way)
+    const user = await User.findById(request.params.id);
+    response.status(200).json(user);
+  } catch (error) {
+    response.status(404).json({ message: error });
+  }
+};

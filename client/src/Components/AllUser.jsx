@@ -72,7 +72,7 @@ const AllUser = () => {
                 variant="contained"
                 style={{ marginRight: 10 }}
                 onClick={() => {
-                  navigate("./editUser");
+                  navigate(`/editUser/${user._id}`);
                 }}
               >
                 Edit
