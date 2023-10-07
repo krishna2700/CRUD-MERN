@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { getUsers } from "../service/api";
+import { getUsers, deleteUserApi } from "../service/api";
 import { styled } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 
@@ -47,6 +47,11 @@ const AllUser = () => {
     }
   };
 
+  const deleteUser = async (id) => {
+    await deleteUserApi(id);
+    getAllUsers();
+  };
+
   return (
     <StyledTable>
       <TableHead>
@@ -61,7 +66,7 @@ const AllUser = () => {
       </TableHead>
       <TableBody>
         {users.map((user) => (
-          <TBody key={user.userId}>
+          <TBody key={user._id}>
             <TableCell>{user.userId}</TableCell>
             <TableCell>{user.name}</TableCell>
             <TableCell>{user.username}</TableCell>
@@ -77,7 +82,11 @@ const AllUser = () => {
               >
                 Edit
               </Button>
-              <Button variant="contained" color="secondary">
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => deleteUser(user._id)}
+              >
                 Delete
               </Button>
             </TableCell>
